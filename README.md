@@ -54,7 +54,8 @@ database or automated commits. The file can also be downloaded as a backup.
 
 History begins with this site's first observations; earlier votes cannot be
 reconstructed. An empty poll has no price or graph line. Prices are rounded to
-100 cents in total, and the graph shows those prices over time. Live quotes can
+$1.00 in total, and the graph shows those prices over time. Prices below $1.00
+use cents; the full dollar displays as $1.00. Live quotes can
 be newer than the most recent recorded graph point.
 
 When building elsewhere, set `HISTORY_URL` to the deployed `history.json` URL to

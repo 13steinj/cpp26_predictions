@@ -44,7 +44,8 @@ async function refreshQuote(card) {
     const prices = cents(counts);
     for (const [i, code] of positions.entries()) {
       const contract = card.querySelector(`[data-position="${code}"]`);
-      contract.querySelector('.price').innerHTML = prices[i] === null ? '&mdash;' : `${prices[i]}<small>&cent;</small>`;
+      contract.querySelector('.price').innerHTML = prices[i] === null ? '&mdash;'
+        : prices[i] === 100 ? '$1.00' : `${prices[i]}<small>&cent;</small>`;
       contract.querySelector('.share').textContent = total ? `${(100 * counts[i] / total).toFixed(1)}% of votes` : 'No votes yet';
       contract.querySelector('.ballots').textContent = `${counts[i].toLocaleString()} ${counts[i] === 1 ? 'vote' : 'votes'}`;
     }

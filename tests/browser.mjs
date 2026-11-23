@@ -91,7 +91,7 @@ print(json.dumps({'html': html, 'polls': polls}))
     assert.equal(await page.locator('.ballots').first().innerText(), online ? '1 vote' : '3 votes');
     if (online) {
       const prices = await page.locator('.market').first().locator('.price').allTextContents();
-      assert.equal(prices.reduce((n, value) => n + parseInt(value), 0), 100);
+      assert.equal(prices.reduce((n, value) => n + (value.startsWith('$') ? Number(value.slice(1)) * 100 : parseInt(value)), 0), 100);
     }
     assert.equal(await page.locator('.history svg').count(), Object.keys(fixture.polls).length);
     await context.close();
@@ -101,7 +101,7 @@ print(json.dumps({'html': html, 'polls': polls}))
   await livePage.goto(base);
   await livePage.locator('.quote-state').first().filter({ hasText: /^Live ·/ }).waitFor();
   const livePrices = await livePage.locator('.price').allTextContents();
-  assert.ok(livePrices.every(price => price === '—' || /^\d+¢$/.test(price)));
+  assert.ok(livePrices.every(price => price === '—' || price === '$1.00' || /^\d+¢$/.test(price)));
   await livePage.close();
   console.log('Passed real public API and browser CORS: live quote loaded on-page');
   // Read the real voting page without casting an artificial sentiment vote.

@@ -142,7 +142,7 @@ def render_history(samples, title, at):
             if values[-1][i] is not None:
                 lines.append(f'<circle class="history-point {code.lower()}" cx="{x[-1]:.2f}" cy="{4 + (100 - values[-1][i]) * 1.52:.2f}" r="3"/>')
         chart = f'''<div class="history-chart">
-          <div class="history-axis" aria-hidden="true"><span>100&cent;</span><span>50&cent;</span><span>0&cent;</span></div>
+          <div class="history-axis" aria-hidden="true"><span>$1.00</span><span>50&cent;</span><span>0&cent;</span></div>
           <svg viewBox="0 0 640 160" preserveAspectRatio="none" role="img" aria-label="{escape(title, quote=True)}: position prices over time">
             <path class="history-grid" d="M4 4H636 M4 80H636 M4 156H636"/>{''.join(lines)}</svg></div>
           <div class="history-times"><time datetime="{start.isoformat()}">{start.strftime('%d %b %H:%M')} UTC</time>
@@ -159,7 +159,7 @@ def render_market(market, poll, samples=(), at=None):
     contracts = []
     total = sum(counts)
     for (code, label), count, price in zip(POSITIONS, counts, cents):
-        value = '&mdash;' if price is None else f'{price}<small>&cent;</small>'
+        value = '&mdash;' if price is None else '$1.00' if price == 100 else f'{price}<small>&cent;</small>'
         share = f'{100 * count / total:.1f}% of votes' if total else 'No votes yet'
         contracts.append(f'''<div class="contract {code.lower()}" data-position="{code}">
           <dt>{code}</dt><dd><span class="price">{value}</span>
