@@ -19,7 +19,7 @@ try {
     page.on('pageerror', error => failures.push(error.message));
     page.on('response', response => { if (!response.ok()) failures.push(response.url()); });
     await page.goto(base);
-    assert.equal(await page.locator('script[src="quotes.js"]').count(), 1);
+    assert.equal(await page.locator('script[src^="quotes.js?v="]').count(), 1);
     assert.ok(await page.locator('h1').isVisible());
     assert.equal(await page.locator('.contract').count(), 5 * await page.locator('.market').count());
     assert.ok(await page.locator('.market').count() > 0);
@@ -60,7 +60,7 @@ for market in markets:
 html = Template((ROOT / 'template.html').read_text()).substitute(
     discussion=DISCUSSION, market_count=len(markets), market_label='markets',
     vote_count=10 * len(markets), markets=''.join(rendered),
-    updated_iso=at.isoformat(), updated_display='Synthetic browser test data')
+    quotes_version='fixture', updated_iso=at.isoformat(), updated_display='Synthetic browser test data')
 print(json.dumps({'html': html, 'polls': polls}))
 `], { encoding: 'utf8' }));
   for (const width of [1280, 390, 320]) {
@@ -80,13 +80,15 @@ print(json.dumps({'html': html, 'polls': polls}))
   for (const online of [true, false]) {
     const context = await browser.newContext();
     await context.route(`${base}fixture`, route => route.fulfill({ contentType: 'text/html', body: fixture.html }));
-    await context.route(base, route => route.fulfill({ contentType: 'text/html', body: fixture.html }));
+    await context.route(base, route => route.fulfill({ contentType: 'text/html', body: fixture.html.replace(/<svg[\s\S]*?<\/svg>/g, '<p>Stale cached chart</p>') }));
+    await context.route(`${base}?*`, route => route.fulfill({ contentType: 'text/html', body: fixture.html.replaceAll('<h4>Price history</h4>', '<h4>Updated price history</h4>') }));
     await context.route('https://api.strawpoll.com/v3/polls/*', route => online
       ? route.fulfill({ contentType: 'application/json', body: JSON.stringify(fixture.polls[new URL(route.request().url()).pathname.split('/').at(-1)]) })
       : route.abort());
     const page = await context.newPage();
     await page.goto(`${base}fixture`);
     await page.locator('.quote-state').first().filter({ hasText: online ? /^Live ·/ : 'Live update unavailable' }).waitFor();
+    await page.locator('.history h4').first().filter({ hasText: 'Updated price history' }).waitFor();
     assert.equal(await page.locator('.price').first().innerText(), online ? '34¢' : '30¢');
     assert.equal(await page.locator('.ballots').first().innerText(), online ? '1 vote' : '3 votes');
     if (online) {

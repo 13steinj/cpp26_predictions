@@ -32,7 +32,7 @@ terminal. It records changed vote counts every minute while the server runs.
 
 Once you choose to commit and push, set **Settings > Pages > Source** to
 **GitHub Actions**. The included workflow builds and deploys on pushes to `master`,
-on manual runs, and roughly every 30 minutes. GitHub can delay scheduled runs;
+on manual runs, and roughly every five minutes. GitHub can delay scheduled runs;
 the page displays its UTC snapshot time and links to live results.
 
 There are no API keys. A failed poll fetch or incompatible
@@ -51,6 +51,7 @@ no voter identities or IP addresses. Each build reads the previously published
 history using the Pages URL, adds changed counts, and redeploys the history file
 with the site. This preserves history across clean Actions runners without a
 database or automated commits. The file can also be downloaded as a backup.
+History and chart downloads use unique URLs to avoid stale copies in the Pages cache.
 
 History begins with this site's first observations; earlier votes cannot be
 reconstructed. An empty poll has no price or graph line. Prices are rounded to

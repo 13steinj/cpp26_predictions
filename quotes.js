@@ -63,7 +63,7 @@ async function refreshQuote(card) {
 
 async function refreshHistory() {
   try {
-    const response = await fetch('./', { cache: 'no-store' });
+    const response = await fetch(`./?snapshot=${Date.now()}`, { cache: 'no-store' });
     if (!response.ok) return;
     const latest = new DOMParser().parseFromString(await response.text(), 'text/html');
     for (const card of cards) {

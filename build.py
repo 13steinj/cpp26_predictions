@@ -7,6 +7,7 @@ import re
 import shutil
 import time
 from datetime import datetime, timezone
+from hashlib import sha256
 from html import escape
 from pathlib import Path
 from string import Template
@@ -71,7 +72,9 @@ def counts_from_poll(poll):
 def load_history(path, url=None):
     if url:
         try:
-            with urlopen(Request(url, headers={"Cache-Control": "no-cache"}), timeout=30) as response:
+            separator = '&' if '?' in url else '?'
+            fresh_url = f'{url}{separator}snapshot={time.time_ns()}'
+            with urlopen(Request(fresh_url, headers={"Cache-Control": "no-cache"}), timeout=30) as response:
                 history = json.load(response)
         except HTTPError as error:
             if error.code != 404:
@@ -203,6 +206,7 @@ def build():
         market_label="market" if len(markets) == 1 else "markets",
         vote_count=f"{sum(count for _, count in rendered):,}",
         markets="\n".join(html for html, _ in rendered),
+        quotes_version=sha256((ROOT / "quotes.js").read_bytes()).hexdigest()[:12],
         updated_iso=now.isoformat(timespec="seconds"),
         updated_display=now.strftime("%d %b %Y, %H:%M UTC"))
     # Only write after every poll succeeds. Failed builds leave the deployed snapshot intact.
