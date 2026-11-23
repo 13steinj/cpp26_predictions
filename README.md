@@ -40,6 +40,10 @@ poll setting fails the build, leaving the previous deployment in place. Actions
 must remain enabled; GitHub can disable schedules after prolonged inactivity in
 public repositories. Scheduled refreshes deploy artifacts; they do not commit.
 
+The workflow uploads the Pages artifact, then `deploy.py` publishes that
+artifact ID through GitHub's Pages API using the workflow's automatic token
+and OIDC identity. No extra deployment credentials are needed.
+
 ## Price history
 
 `_site/history.json` stores timestamped aggregate counts for each poll. It stores
