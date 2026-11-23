@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="C++26 community sentiment, priced like a prediction market. Five WG21-style positions. Zero real money.">
+<title>C++26 sentiment exchange</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+<script type="module" src="quotes.js"></script>
+<header>
+  <a class="wordmark" href="./" aria-label="C++26 sentiment exchange home">C++26 <span>/ exchange</span></a>
+  <a href="$discussion">r/cpp discussion &nearr;</a>
+</header>
+<main>
+  <p class="eyebrow">The unofficial committee sentiment exchange</p>
+  <h1>Put your two cents<br>on the standard.</h1>
+  <p class="intro">Prediction-market energy. WG21 ballot. Absolutely no liquidity.</p>
+  <div class="tape" aria-label="Exchange summary">
+    <span><strong>$market_count</strong> $market_label</span>
+    <span><strong class="total-votes">$vote_count</strong> votes cast</span>
+    <span><strong>0</strong> dollars at stake</span>
+  </div>
+  <div class="market-heading"><h2>Community sentiment</h2><span>Five positions. One vote per IP, per poll.</span></div>
+  $markets
+  <details>
+    <summary>How does this exchange work?</summary>
+    <p>Pick a position on StrawPoll: <strong>SF</strong> (Strongly For), <strong>F</strong> (For),
+      <strong>Abstain</strong>, <strong>A</strong> (Against), or <strong>SA</strong> (Strongly Against).</p>
+    <p>Each price is that position's share of votes, expressed in cents on a dollar.
+      Prices round to a total of 100&cent;. An empty poll has no price yet.
+      These are opinions, not probabilities, trades, or official WG21 votes.</p>
+    <p>StrawPoll collects the votes and limits each poll to one vote per IP address.
+      Shared networks share that limit; an IP address is not a person.
+      Voting on StrawPoll requires JavaScript.</p>
+    <p>With JavaScript enabled, prices and vote counts refresh every minute.
+      Without it, this page shows the latest published snapshot.</p>
+    <p>The graph shows recorded price snapshots. New history is published roughly every
+      30 minutes, starting with this site's first observation. It does not reconstruct earlier votes.</p>
+  </details>
+</main>
+<footer><span>Not affiliated with ISO or WG21. Contracts settle to absolutely nothing.</span>
+  <span>Snapshot <time datetime="$updated_iso">$updated_display</time></span></footer>
+</html>
