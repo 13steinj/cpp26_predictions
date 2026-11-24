@@ -2,11 +2,11 @@
 <html lang="en">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="C++26 community sentiment, priced like a prediction market. Five WG21-style positions. Zero real money.">
+<meta name="description" content="C++26 community sentiment with three consensus prices, five WG21-style votes, saved snapshots and live data.">
 <title>C++26 sentiment exchange</title>
 <link rel="icon" href="data:,">
-<link rel="stylesheet" href="style.css">
-<script type="module" src="quotes.js?v=$quotes_version"></script>
+<link rel="stylesheet" href="style.css?v=$asset_version">
+<script type="module" src="quotes.js?v=$asset_version"></script>
 <header>
   <a class="wordmark" href="./" aria-label="C++26 sentiment exchange home">C++26 <span>/ exchange</span></a>
   <a href="$discussion">r/cpp discussion &nearr;</a>
@@ -20,24 +20,36 @@
     <span><strong class="total-votes">$vote_count</strong> votes cast</span>
     <span><strong>0</strong> dollars at stake</span>
   </div>
-  <div class="market-heading"><h2>Community sentiment</h2><span>Five positions. One vote per IP, per poll.</span></div>
+  <div class="market-heading"><h2>Community sentiment</h2><span>Three outcomes. One vote per IP, per poll.</span></div>
   $markets
   <details>
     <summary>How does this exchange work?</summary>
     <p>Pick a position on StrawPoll: <strong>SF</strong> (Strongly For), <strong>F</strong> (For),
       <strong>Abstain</strong>, <strong>A</strong> (Against), or <strong>SA</strong> (Strongly Against).</p>
-    <p>Each price is that position's share of votes, expressed in cents on a dollar.
-      Prices round to a total of $$1.00. An empty poll has no price yet.
-      These are opinions, not probabilities, trades, or official WG21 votes.</p>
+    <p>We combine SF+F as votes for and A+SA as votes against. Each ballot counts once.
+      Following the <a href="$consensus_source">WG21 subgroup guideline</a>, consensus requires
+      more than twice as many votes on one side as the other, excluding abstentions.
+      At least four times as many votes gives this site's &ldquo;strong consensus&rdquo; label.
+      Official chairs judge consensus after discussion.</p>
+    <p>Our graded prices are proportional to For<sup>2</sup> : 2&times;For&times;Against : Against<sup>2</sup>.
+      They total $$1.00. No consensus is the largest price between the two consensus thresholds.
+      Exact threshold ties favor no consensus when rounding.</p>
+    <p>SF and SA get the full indicative payout; F and A get half. Abstain gets the full
+      no-consensus payout. Empty polls have no price. The pricing formula, strong label and
+      payout sizes are site conventions, and there is no real money at stake.</p>
     <p>StrawPoll collects the votes and limits each poll to one vote per IP address.
       Shared networks share that limit; an IP address is not a person.
       Voting on StrawPoll requires JavaScript.</p>
     <p>With JavaScript enabled, prices and vote counts refresh every minute.
       Without it, this page shows the latest published snapshot.</p>
-    <p>The graph shows recorded price snapshots. New history is published roughly every
-      five minutes, starting with this site's first observation. It does not reconstruct earlier votes.</p>
+    <p>Solid lines and filled dots show saved snapshots. Dashed lines and hollow dots
+      show the latest live data, marked &ldquo;Current time&rdquo;. That time is when this page fetched
+      the vote totals; the browser does not save it to history. Expand the snapshot information
+      to see each timestamp, price and five-way ballot count.</p>
+    <p>History is scheduled to refresh every five minutes through GitHub Actions; scheduled runs
+      can lag. The live point still updates every minute. Older vote events cannot be reconstructed.</p>
   </details>
 </main>
 <footer><span>Not affiliated with ISO or WG21. Contracts settle to absolutely nothing.</span>
-  <span>Snapshot <time datetime="$updated_iso">$updated_display</time></span></footer>
+  <span>Last saved check <time datetime="$updated_iso">$updated_display</time></span></footer>
 </html>
